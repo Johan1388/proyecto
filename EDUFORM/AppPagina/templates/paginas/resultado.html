@@ -37,17 +37,25 @@
                         {% endfor %}
                     </div>
 
-                    <h4>Carreras recomendadas para {{ area }}:</h4>
+                    <h4>Recomendaciones para {{ area }}:</h4>
                     <div class="list-group mb-4">
-                        {% for carrera in carreras %}
-                        <div class="list-group-item">
-                            <h5 class="mb-1">{{ carrera.nombre }}</h5>
-                            <p class="mb-1"><strong>Tipo de formación:</strong> {{ carrera.get_tipo_display }}</p>
-                            {% if carrera.descripcion %}
-                            <p class="mb-0"><strong>¿Para qué es buena esta carrera?</strong> {{ carrera.descripcion }}</p>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
+                        {% if carreras %}
+                            {% for carrera in carreras %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h5 class="mb-1">{{ carrera.nombre }}</h5>
+                                        <p class="mb-1 text-muted">{{ carrera.get_tipo_display }}</p>
+                                    </div>
+                                </div>
+                                <p class="mb-1"><strong>Recomendación:</strong> {{ carrera.descripcion|default:"Esta carrera es una excelente opción para tu perfil vocacional." }}</p>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                No hay recomendaciones disponibles para esta área.
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="text-center">

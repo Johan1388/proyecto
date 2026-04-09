@@ -1,11 +1,13 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 import json
 
 from .models import Carrera, Resultado, AreaVocacional
-from .forms import UsuarioForm
+from .forms import UsuarioForm, FormularioRegistro
 
 
 # ======================
@@ -18,6 +20,7 @@ def inicio(request):
 # ======================
 # TEST
 # ======================
+@login_required
 def test_vocacional(request):
     return render(request, "paginas/servicios.html")
 
@@ -25,6 +28,7 @@ def test_vocacional(request):
 # ======================
 # RESULTADO
 # ======================
+@login_required
 def resultado_test(request):
 
     if request.method == "POST":
@@ -32,7 +36,7 @@ def resultado_test(request):
         data = request.POST.get("resultados")
 
         if not data:
-            return redirect("test")
+            return redirect("servicios")
 
         resultados = json.loads(data)
 
@@ -68,7 +72,7 @@ def resultado_test(request):
             "porcentajes": porcentajes_ordenados,
         })
 
-    return redirect("test")
+    return redirect("servicios")
 
 
 # ======================
@@ -77,14 +81,14 @@ def resultado_test(request):
 def register(request):
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = FormularioRegistro(request.POST)
 
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('gestion_usuarios')
+            return redirect('inicio')
     else:
-        form = UserCreationForm()
+        form = FormularioRegistro()
 
     return render(request, 'paginas/register.html', {'form': form})
 
@@ -92,6 +96,7 @@ def register(request):
 # ======================
 # LISTAR USUARIOS
 # ======================
+@login_required
 def gestion_usuarios(request):
     usuarios = User.objects.all()
     return render(request, 'paginas/gestion_usuarios.html', {
@@ -102,8 +107,12 @@ def gestion_usuarios(request):
 # ======================
 # EDITAR USUARIO
 # ======================
+@login_required
 def editar_usuario(request, pk):
     usuario = get_object_or_404(User, pk=pk)
+
+    if not request.user.is_staff and request.user != usuario:
+        raise PermissionDenied
 
     if request.method == 'POST':
         form = UsuarioForm(request.POST, instance=usuario)
@@ -122,8 +131,12 @@ def editar_usuario(request, pk):
 # ======================
 # ELIMINAR USUARIO
 # ======================
+@login_required
 def eliminar_usuario(request, pk):
     usuario = get_object_or_404(User, pk=pk)
+
+    if not request.user.is_staff and request.user != usuario:
+        raise PermissionDenied
 
     if request.method == "POST":
         usuario.delete()
