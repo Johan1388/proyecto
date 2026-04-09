@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Gestión de Usuarios - EDUFORM{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Gestión de Usuarios</h2>
+            <p class="text-muted">Administra los usuarios registrados.</p>
+        </div>
+
+        <a href="{% url 'register' %}" class="btn btn-success">
+            ➕ Nuevo Usuario
+        </a>
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Fecha</th>
+                        <th>Resultado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>#{{ usuario.id }}</td>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.date_joined|date:"d M Y" }}</td>
+
+                        <td>
+                            {% if usuario.resultado_set.all %}
+                                <span class="badge bg-info text-dark">
+                                    {{ usuario.resultado_set.last.area.nombre }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">Sin test</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-center">
+
+                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-warning btn-sm">✏️</a>
+
+                        <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger btn-sm">🗑️</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

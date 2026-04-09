@@ -1,0 +1,38 @@
+h4 {
+    color: #B0B0B0;
+    font-size: large;
+}
+
+/* Overrides for Bootstrap */
+.btn-primary {
+    background-color: #2C2C2C !important;
+    border-color: #333333 !important;
+    color: #F5F5F5 !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.btn-primary:hover {
+    background-color: #1A1A1A !important;
+    border-color: #B0B0B0 !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.7);
+}
+
+.btn-secondary {
+    background-color: #1A1A1A !important;
+    border-color: #333333 !important;
+    color: #F5F5F5 !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.btn-secondary:hover {
+    background-color: #2C2C2C !important;
+    border-color: #B0B0B0 !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.7);
+}
+
+body {
+    background-color: #1A1A1A;
+    color: #F5F5F5;
+}

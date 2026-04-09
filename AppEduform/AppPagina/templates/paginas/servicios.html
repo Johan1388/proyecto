@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %} 🚀 Test Vocacional EDUFORM {% endblock %}
+
+{% block contenido %}
+
+<style>
+body {
+    background: linear-gradient(135deg, #adadad);
+    color: #F5F5F5;
+}
+
+.test-card {
+    background: #004526;
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 40px;
+}
+
+.pregunta { display: none; }
+.pregunta.activa { display: block; }
+
+.progress {
+    height: 22px;
+    border-radius: 22px;
+}
+
+.progress-bar {
+    background-color: #2d3877;
+}
+</style>
+
+<h1 class="text-center mb-4">Descubre tu futuro con EDUFORM</h1>
+
+<div class="container d-flex justify-content-center">
+    <div class="test-card" style="max-width:900px; width:100%;">
+
+        <div class="progress mb-4">
+            <div id="barra" class="progress-bar" style="width:0%"></div>
+        </div>
+
+        <form id="formTest" method="post" action="{% url 'resultado' %}">
+            {% csrf_token %}
+
+            <!-- 🔥 INPUT CLAVE -->
+            <input type="hidden" name="resultados" id="resultadosInput">
+
+            <div id="contenedorPreguntas"></div>
+
+            <div class="text-center d-none" id="botonResultado">
+                <button type="submit" class="btn btn-primary mt-3">
+                    Ver Resultado
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+
+// ==========================
+// PREGUNTAS
+// ==========================
+const preguntas = [
+"¿Te gustaría programar aplicaciones o páginas web?",
+"¿Te interesa reparar computadores o redes?",
+"¿Te gustaría desarrollar software o videojuegos?",
+"¿Te interesa trabajar con bases de datos?",
+
+"¿Te gustaría administrar una empresa o negocio?",
+"¿Te interesa organizar proyectos empresariales?",
+"¿Te gustaría trabajar en contabilidad o finanzas?",
+"¿Te interesa emprender tu propio negocio?",
+
+"¿Te gustaría diseñar logotipos o publicidad digital?",
+"¿Te interesa editar videos o contenido multimedia?",
+"¿Te gustaría trabajar con animación digital?",
+"¿Te interesa crear contenido para redes sociales?",
+
+"¿Te gustaría ayudar en la atención de pacientes?",
+"¿Te interesa promover hábitos saludables?",
+"¿Te gustaría trabajar en hospitales o clínicas?",
+"¿Te interesa cuidar adultos mayores o niños?",
+
+"¿Te gustaría guiar turistas o mostrar lugares?",
+"¿Te interesa organizar viajes o eventos?",
+"¿Te gustaría trabajar en hoteles o turismo?",
+"¿Te interesa promover destinos turísticos?",
+
+"¿Te gustaría construir casas o edificios?",
+"¿Te interesa interpretar planos de construcción?",
+"¿Te gustaría supervisar obras?",
+"¿Te interesa trabajar con herramientas de construcción?",
+
+"¿Te gustaría trabajar con cultivos o alimentos?",
+"¿Te interesa procesar productos agrícolas?",
+"¿Te gustaría mejorar la producción agrícola?",
+"¿Te interesa trabajar en el campo?",
+
+"¿Te gustaría reparar motos o carros?",
+"¿Te interesa trabajar con motores?",
+"¿Te gustaría diagnosticar fallas mecánicas?",
+"¿Te interesa mantener vehículos?"
+];
+
+
+const categorias = [
+"Tecnología","Tecnología","Tecnología","Tecnología",
+
+"Administración","Administración","Administración","Administración",
+
+"Diseño y Multimedia","Diseño y Multimedia","Diseño y Multimedia","Diseño y Multimedia",
+
+"Salud","Salud","Salud","Salud",
+
+"Turismo","Turismo","Turismo","Turismo",
+
+"Construcción","Construcción","Construcción","Construcción",
+
+"Agroindustria","Agroindustria","Agroindustria","Agroindustria",
+
+"Mecánica","Mecánica","Mecánica","Mecánica"
+];
+
+// ==========================
+let resultados = {};
+categorias.forEach(cat => resultados[cat] = 0);
+
+let actual = 0;
+const total = preguntas.length;
+
+const contenedor = document.getElementById("contenedorPreguntas");
+const barra = document.getElementById("barra");
+const boton = document.getElementById("botonResultado");
+
+// ==========================
+// CREAR PREGUNTAS
+// ==========================
+preguntas.forEach((texto, i) => {
+
+    const div = document.createElement("div");
+    div.classList.add("pregunta");
+
+    if(i === 0) div.classList.add("activa");
+
+    div.innerHTML = `
+        <h4>${i+1}. ${texto}</h4>
+        <button type="button" onclick="responder(${i}, true)">👍 Me interesa</button>
+        <button type="button" onclick="responder(${i}, false)">👎 No me interesa</button>
+    `;
+
+    contenedor.appendChild(div);
+});
+
+// ==========================
+// RESPONDER
+// ==========================
+function responder(i, interes){
+
+    if(interes){
+        resultados[categorias[i]]++;
+    }
+
+    document.querySelectorAll(".pregunta")[i].classList.remove("activa");
+
+    actual++;
+    barra.style.width = (actual / total * 100) + "%";
+
+    if(actual < total){
+        document.querySelectorAll(".pregunta")[actual].classList.add("activa");
+    } else {
+        boton.classList.remove("d-none");
+
+        document.getElementById("resultadosInput").value = JSON.stringify(resultados);
+    }
+}
+
+</script>
+
+{% endblock %}

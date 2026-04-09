@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block titulo %} EDUFORM {% endblock %}
+
+{% block contenido %} 
+
+<style>
+body {
+    background-color: #adadad;
+}
+
+main, section, .container {
+    padding-top: 20px;
+}
+
+/* BOTÓN PRO */
+.btn-custom {
+    background-color: #2d3877; /* azul */
+    color: white;
+    border: 2px solid #2d3877;
+    border-radius: 50px;
+    padding: 16px 70px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Hover */
+.btn-custom:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
++}
+
+</style>
+
+<!-- Banner -->
+<section style="background: linear-gradient(135deg, #004526); color: #ffffff; padding: 110px 20px; border-radius: 15px; margin-bottom: 40px;">
+
+    <div style="display:flex; align-items:center; justify-content:center; gap:35px; margin-bottom:30px;">
+        
+        <img src="{% static 'AppPagina/img/LOGO.png' %}" 
+        alt="Logo EDUFORM" 
+        style="height:120px;">
+        
+        <h1 style="font-size:3.8rem; margin:0; font-weight:700;">
+            Bienvenido a EDUFORM
+        </h1>
+
+    </div>
+
+    <p style="font-size:1.8rem; max-width:900px; margin:0 auto; text-align:center; line-height:1.6;">
+        Descubre tu potencial, explora tus intereses y encuentra la carrera o camino profesional que más se adapta a ti.
+    </p>
+
+    <div style="display:flex; justify-content:center; margin-top:40px;">
+        <a href="{% url 'servicios' %}" class="btn btn-custom">
+            Comienza el Test Vocacional
+        </a>
+    </div>
+
+</section>
+
+<!-- Misión y Visión -->
+<section class="container-fluid mb-5" style="padding:60px 80px;">
+    <div class="row text-center justify-content-center">
+
+        <div class="col-md-5 mb-4">
+            <div style="background:#00b4d8; padding:50px; border-radius:20px; color:white; height:100%;">
+                <h2>Misión</h2>
+                <p style="font-size:1.2rem;">
+                    En EDUFORM buscamos guiar a estudiantes y profesionales en el descubrimiento de sus fortalezas,
+                    intereses y habilidades, ofreciendo herramientas prácticas para tomar decisiones educativas
+                    y laborales informadas.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-5 mb-4">
+            <div style="background:#0077b6; padding:50px; border-radius:20px; color:white; height:100%;">
+                <h2>Visión</h2>
+                <p style="font-size:1.2rem;">
+                    Ser la plataforma líder en orientación vocacional y educativa en la región,
+                    reconocida por su innovación, confiabilidad y resultados efectivos en el
+                    desarrollo personal y profesional de nuestros usuarios.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Servicios -->
+<section class="container-fluid mb-5" style="padding:60px 80px;">
+    <h2 class="text-center mb-5" style="color:#2c3e50; font-size:2.5rem;">Nuestros Servicios</h2>
+
+    <div class="row justify-content-center text-center">
+
+        <div class="col-md-4 mb-4">
+            <div style="background:#90dbf4; padding:40px; border-radius:20px; color:#023e8a;
+            height:100%; box-shadow:0 2px 8px rgba(0, 0, 0, 0.1);">
+
+                <h3>📊 Test Vocacional</h3>
+                <p style="font-size:1.1rem;">
+                    Descubre tus áreas de interés y habilidades y encuentra la carrera que mejor se adapta a ti.
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Beneficios -->
+<section class="container-fluid mb-5 text-center" style="padding:60px 80px;">
+    <h2 class="mb-5" style="color:#2c3e50; font-size:2.5rem;">Por qué elegir EDUFORM</h2>
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-3 mb-3">
+            <div style="background:#00b4d8; padding:30px; border-radius:15px; color:white;">
+                <p style="font-size:1.2rem; margin:0;">
+                    🎯 Orientación precisa y confiable
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div style="background:#0077b6; padding:30px; border-radius:15px; color:white;">
+                <p style="font-size:1.2rem; margin:0;">
+                    ⚡ Plataforma interactiva y dinámica
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+    
+{% endblock %}
+
+{% block pie %} Usted está en la sección de inicio {% endblock %}
