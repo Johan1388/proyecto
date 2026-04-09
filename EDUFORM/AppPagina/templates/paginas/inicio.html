@@ -1,144 +1,279 @@
-{% extends "base.html" %}
+    {% extends "base.html" %}
 
 {% load static %}
 
-{% block titulo %} EDUFORM {% endblock %}
+{% block titulo %} EDUFORM - Orientación Vocacional {% endblock %}
 
 {% block contenido %} 
 
 <style>
 body {
-    background-color: #adadad;
+    background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+    min-height: 100vh;
 }
 
 main, section, .container {
     padding-top: 20px;
 }
 
-/* BOTÓN PRO */
+/* BOTÓN PRINCIPAL */
 .btn-custom {
-    background-color: #2d3877; /* azul */
+    background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
     color: white;
-    border: 2px solid #2d3877;
-    border-radius: 50px;
-    padding: 16px 70px;
-    font-size: 1.3rem;
-    font-weight: 600;
-    transition: 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 30px;
+    padding: 18px 60px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+    text-decoration: none;
+    display: inline-block;
 }
 
-/* Hover */
 .btn-custom:hover {
-    background-color: white;
-    color: black;
-    border: 2px solid black;
-+}
+    background: linear-gradient(135deg, #003d99 0%, #0066cc 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.4);
+    color: white;
+}
 
+.banner-principal {
+    background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+    color: #ffffff;
+    padding: 100px 40px;
+    border-radius: 25px;
+    margin: 0 auto 60px auto;
+    box-shadow: 0 20px 60px rgba(0, 102, 204, 0.2);
+    max-width: 700px;
+    text-align: center;
+}
+
+.banner-principal h1 {
+    font-size: 3.5rem;
+    margin: 0 0 20px 0;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.banner-principal p {
+    font-size: 1.3rem;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+    line-height: 1.8;
+    opacity: 0.95;
+}
+
+.card-seccion {
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    margin-bottom: 40px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+}
+
+.card-seccion h2 {
+    font-size: 2.2rem;
+    color: #1f2937;
+    font-weight: 800;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.mision-vision-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.visioncard {
+    background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+    padding: 40px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+    transition: all 0.3s ease;
+}
+
+.visioncard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0, 102, 204, 0.3);
+}
+
+.visioncard h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.visioncard p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.servicios-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.servicio-card {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    padding: 50px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2);
+    transition: all 0.3s ease;
+}
+
+.servicio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(5, 150, 105, 0.3);
+}
+
+.servicio-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.servicio-card p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin: 0;
+    opacity: 0.95;
+}
+
+.beneficios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.beneficio-item {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.beneficio-item:hover {
+    border-color: #0066cc;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.15);
+}
+
+.beneficio-emoji {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.beneficio-item h4 {
+    font-size: 1.3rem;
+    color: #1f2937;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.beneficio-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .mision-vision-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .banner-principal h1 {
+        font-size: 2.5rem;
+    }
+}
 </style>
 
-<!-- Banner -->
-<section style="background: linear-gradient(135deg, #004526); color: #ffffff; padding: 110px 20px; border-radius: 15px; margin-bottom: 40px;">
-
-    <div style="display:flex; align-items:center; justify-content:center; gap:35px; margin-bottom:30px;">
-        
-        <img src="{% static 'AppPagina/img/LOGO.png' %}" 
-        alt="Logo EDUFORM" 
-        style="height:120px;">
-        
-        <h1 style="font-size:3.8rem; margin:0; font-weight:700;">
-            Bienvenido a EDUFORM
-        </h1>
-
-    </div>
-
-    <p style="font-size:1.8rem; max-width:900px; margin:0 auto; text-align:center; line-height:1.6;">
-        Descubre tu potencial, explora tus intereses y encuentra la carrera o camino profesional que más se adapta a ti.
-    </p>
-
-    <div style="display:flex; justify-content:center; margin-top:40px;">
-        <a href="{% url 'servicios' %}" class="btn btn-custom">
-            Comienza el Test Vocacional
+<!-- Banner Principal -->
+<section class="banner-principal">
+    <h1>🎯 Bienvenido a EDUFORM</h1>
+    <p>Descubre tu verdadera vocación y encuentra la carrera profesional que deseas para tu futuro. ¡Comienza hoy tu viaje hacia el éxito!</p>
+    <div style="text-align: center;">
+        <a href="{% url 'servicios' %}" class="btn-custom">
+            ⚡ Iniciar Test Vocacional
         </a>
     </div>
-
 </section>
 
 <!-- Misión y Visión -->
-<section class="container-fluid mb-5" style="padding:60px 80px;">
-    <div class="row text-center justify-content-center">
-
-        <div class="col-md-5 mb-4">
-            <div style="background:#00b4d8; padding:50px; border-radius:20px; color:white; height:100%;">
-                <h2>Misión</h2>
-                <p style="font-size:1.2rem;">
-                    En EDUFORM buscamos guiar a estudiantes y profesionales en el descubrimiento de sus fortalezas,
-                    intereses y habilidades, ofreciendo herramientas prácticas para tomar decisiones educativas
-                    y laborales informadas.
-                </p>
-            </div>
+<div class="card-seccion">
+    <h2>Nuestra Misión y Visión</h2>
+    <div class="mision-vision-container">
+        <div class="visioncard">
+            <h3>🎯 Misión</h3>
+            <p>
+                Guiar a estudiantes y profesionales en el descubrimiento de sus fortalezas, intereses y habilidades, 
+                ofreciendo herramientas prácticas y confiables para tomar decisiones educativas y laborales informadas 
+                que transformen sus vidas.
+            </p>
         </div>
-
-        <div class="col-md-5 mb-4">
-            <div style="background:#0077b6; padding:50px; border-radius:20px; color:white; height:100%;">
-                <h2>Visión</h2>
-                <p style="font-size:1.2rem;">
-                    Ser la plataforma líder en orientación vocacional y educativa en la región,
-                    reconocida por su innovación, confiabilidad y resultados efectivos en el
-                    desarrollo personal y profesional de nuestros usuarios.
-                </p>
-            </div>
+        <div class="visioncard" style="background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);">
+            <h3>🚀 Visión</h3>
+            <p>
+                Ser la plataforma líder en orientación vocacional y educativa, reconocida por nuestra innovación, 
+                confiabilidad e impacto positivo en el desarrollo personal y profesional de miles de usuarios en la región.
+            </p>
         </div>
-
     </div>
-</section>
+</div>
 
 <!-- Servicios -->
-<section class="container-fluid mb-5" style="padding:60px 80px;">
-    <h2 class="text-center mb-5" style="color:#2c3e50; font-size:2.5rem;">Nuestros Servicios</h2>
-
-    <div class="row justify-content-center text-center">
-
-        <div class="col-md-4 mb-4">
-            <div style="background:#90dbf4; padding:40px; border-radius:20px; color:#023e8a;
-            height:100%; box-shadow:0 2px 8px rgba(0, 0, 0, 0.1);">
-
-                <h3>📊 Test Vocacional</h3>
-                <p style="font-size:1.1rem;">
-                    Descubre tus áreas de interés y habilidades y encuentra la carrera que mejor se adapta a ti.
-                </p>
-
-            </div>
+<div class="card-seccion">
+    <h2>Nuestro Servicio Principal</h2>
+    <div class="servicios-grid">
+        <div class="servicio-card">
+            <h3>📊 Test Vocacional Interactivo</h3>
+            <p>
+                Completa nuestro test interactivo en pocos minutos y recibe un análisis detallado de tus áreas 
+                de interés. Descubre qué carreras y profesiones se alinean mejor con tu perfil, tus habilidades y tus sueños.
+            </p>
         </div>
-
     </div>
-</section>
+</div>
 
 <!-- Beneficios -->
-<section class="container-fluid mb-5 text-center" style="padding:60px 80px;">
-    <h2 class="mb-5" style="color:#2c3e50; font-size:2.5rem;">Por qué elegir EDUFORM</h2>
-
-    <div class="row justify-content-center">
-
-        <div class="col-md-3 mb-3">
-            <div style="background:#00b4d8; padding:30px; border-radius:15px; color:white;">
-                <p style="font-size:1.2rem; margin:0;">
-                    🎯 Orientación precisa y confiable
-                </p>
-            </div>
+<div class="card-seccion">
+    <h2>Por Qué Elegir EDUFORM</h2>
+    <div class="beneficios-grid">
+        <div class="beneficio-item">
+            <div class="beneficio-emoji">🎯</div>
+            <h4>Orientación Precisa</h4>
+            <p>Test basado en metodologías probadas que te da resultados confiables y personalizados.</p>
         </div>
-
-        <div class="col-md-3 mb-3">
-            <div style="background:#0077b6; padding:30px; border-radius:15px; color:white;">
-                <p style="font-size:1.2rem; margin:0;">
-                    ⚡ Plataforma interactiva y dinámica
-                </p>
-            </div>
+        <div class="beneficio-item">
+            <div class="beneficio-emoji">⚡</div>
+            <h4>Rápido y Fácil</h4>
+            <p>Completa el test en menos de 10 minutos desde cualquier dispositivo.</p>
         </div>
-
+        <div class="beneficio-item">
+            <div class="beneficio-emoji">💡</div>
+            <h4>Recomendaciones Útiles</h4>
+            <p>Obtén sugerencias de carreras detalladas y adaptadas a tu perfil vocacional.</p>
+        </div>
+        <div class="beneficio-item">
+            <div class="beneficio-emoji">🏆</div>
+            <h4>Decisiones Informadas</h4>
+            <p>Toma decisiones sobre tu futuro con confianza y seguridad basadas en datos reales.</p>
+        </div>
     </div>
-</section>
-    
+</div>
+
 {% endblock %}
 
-{% block pie %} Usted está en la sección de inicio {% endblock %}
+{% block pie %} Orientación Vocacional - EDUFORM {% endblock %}

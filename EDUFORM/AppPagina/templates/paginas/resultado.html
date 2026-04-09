@@ -4,68 +4,373 @@
 
 {% block contenido %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white text-center">
-                    <h2 class="mb-0">Resultado de tu Test Vocacional</h2>
-                </div>
-                <div class="card-body">
-                    <h3 class="text-center mb-4">Tu área más fuerte es</h3>
-                    <h1 class="text-center text-primary mb-4">{{ area }}</h1>
+<style>
+    body {
+        background: linear-gradient(135deg, #e8eef7 0%, #dfe8f3 100%);
+        min-height: 100vh;
+    }
 
-                    <div class="alert alert-info text-center" role="alert">
-                    </div>
+    .header-resultado {
+        background: linear-gradient(135deg, rgba(0, 102, 204, 0.95) 0%, rgba(0, 61, 153, 0.95) 100%);
+        color: white;
+        padding: 50px 20px;
+        text-align: center;
+        margin: -12px -12px 40px -12px;
+        border-radius: 0;
+    }
 
-                    <h4>Porcentajes por área:</h4>
-                    <div class="mb-4">
-                        {% for area_pct, pct in porcentajes %}
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="{% if area_pct == area %}font-weight-bold text-primary{% endif %}">{{ area_pct }}</span>
-                            <span>{{ pct }}%</span>
-                        </div>
-                        <div class="progress mb-3" style="height: 20px;">
-                            <div class="progress-bar {% if area_pct == area %}bg-primary{% else %}bg-secondary{% endif %}" 
-                                 role="progressbar" 
-                                 style="width: {{ pct }}%;"
-                                 aria-valuenow="{{ pct }}" 
-                                 aria-valuemin="0" 
-                                 aria-valuemax="100">
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+    .header-resultado h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
 
-                    <h4>Recomendaciones para {{ area }}:</h4>
-                    <div class="list-group mb-4">
-                        {% if carreras %}
-                            {% for carrera in carreras %}
-                            <div class="list-group-item">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <div>
-                                        <h5 class="mb-1">{{ carrera.nombre }}</h5>
-                                        <p class="mb-1 text-muted">{{ carrera.get_tipo_display }}</p>
-                                    </div>
-                                </div>
-                                <p class="mb-1"><strong>Recomendación:</strong> {{ carrera.descripcion|default:"Esta carrera es una excelente opción para tu perfil vocacional." }}</p>
-                            </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="alert alert-warning" role="alert">
-                                No hay recomendaciones disponibles para esta área.
-                            </div>
-                        {% endif %}
-                    </div>
+    .area-principal {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+    }
 
-                    <div class="text-center">
-                        <a href="{% url 'servicios' %}" class="btn btn-secondary">Volver al Test</a>
-                        <a href="{% url 'inicio' %}" class="btn btn-primary">Ir al Inicio</a>
-                    </div>
-                </div>
+    .area-principal h3 {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .area-principal h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .card-resultado {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .card-resultado h4 {
+        color: #0066cc;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .area-item {
+        margin-bottom: 25px;
+    }
+
+    .area-item-nombre {
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+
+    .area-item-barra {
+        background: #e5e7eb;
+        border-radius: 10px;
+        height: 12px;
+        overflow: hidden;
+    }
+
+    .area-item-valor {
+        background: linear-gradient(90deg, #0066cc 0%, #003d99 100%);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+    }
+
+    .area-item-pct {
+        display: inline-block;
+        background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-left: 10px;
+    }
+
+    .carrera-item {
+        border: 2px solid #e5e7eb;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .carrera-item:hover {
+        border-color: #0066cc;
+        box-shadow: 0 8px 20px rgba(0, 102, 204, 0.15);
+        transform: translateY(-3px);
+    }
+
+    .carrera-nombre {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .carrera-tipo {
+        display: inline-block;
+        background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .carrera-desc {
+        color: #555;
+        line-height: 1.7;
+        font-size: 1rem;
+    }
+
+    .botones-accion {
+        display: flex;
+        gap: 15px;
+        margin-top: 40px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .botones-accion a {
+        padding: 15px 40px;
+        border-radius: 25px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn-volver {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: white;
+    }
+
+    .btn-volver:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(75, 85, 99, 0.4);
+    }
+
+    .btn-inicio {
+        background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+        color: white;
+    }
+
+    .btn-inicio:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 102, 204, 0.4);
+    }
+</style>
+
+<div class="header-resultado">
+    <h2>🎉 ¡Resultado de tu Test Vocacional!</h2>
+</div>
+
+<div class="container" style="max-width: 1000px;">
+    
+    <div class="area-principal">
+        <h3>Tu área más fuerte es</h3>
+        <h1>{{ area }}</h1>
+    </div>
+
+    <div class="card-resultado">
+        <h4>📊 Resultados por Área</h4>
+        
+        {% for area_pct, pct in porcentajes %}
+        <div class="area-item">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="area-item-nombre {% if area_pct == area %}text-primary font-weight-bold{% endif %}">{{ area_pct }}</span>
+                <span class="area-item-pct">{{ pct }}%</span>
+            </div>
+            <div class="area-item-barra">
+                <div class="area-item-valor" style="width: {{ pct }}%;"></div>
             </div>
         </div>
+        {% endfor %}
     </div>
+
+    <div class="card-resultado">
+        <h4>🎓 Recomendaciones para {{ area }}</h4>
+        
+        {% if carreras %}
+            {% for carrera in carreras %}
+            <div class="carrera-item">
+                <div class="carrera-nombre">{{ carrera.nombre }}</div>
+                <div class="carrera-tipo">{{ carrera.get_tipo_display }}</div>
+                <p class="carrera-desc">{{ carrera.descripcion|default:"Esta carrera es una excelente opción para tu perfil vocacional." }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning" role="alert" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; border: none; border-radius: 15px; padding: 20px;">
+                ⚠️ No hay recomendaciones disponibles para esta área.
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="botones-accion">
+        <a href="{% url 'servicios' %}" class="btn-volver">↻ Volver al Test</a>
+        <a href="{% url 'inicio' %}" class="btn-inicio">🏠 Ir al Inicio</a>
+    </div>
+
+    <!-- Sección SENA Motivadora -->
+    <div class="seccion-sena">
+        <div class="sena-contenido">
+            <h3>🚀 ¡Próximo Paso hacia tu Futuro Profesional!</h3>
+            <p class="sena-descripcion">
+                Basado en tu resultado vocacional, ahora estás listo para explorar oportunidades educativas y laborales reales.
+            </p>
+            
+            <div class="sena-beneficios">
+                <div class="beneficio-sena">
+                    <span class="icono-beneficio">📚</span>
+                    <p>Explorar programas de formación profesional</p>
+                </div>
+                <div class="beneficio-sena">
+                    <span class="icono-beneficio">💼</span>
+                    <p>Conectar con oportunidades laborales</p>
+                </div>
+                <div class="beneficio-sena">
+                    <span class="icono-beneficio">🎯</span>
+                    <p>Desarrollar tus competencias</p>
+                </div>
+                <div class="beneficio-sena">
+                    <span class="icono-beneficio">🏆</span>
+                    <p>Construir tu mejor futuro</p>
+                </div>
+            </div>
+
+            <a href="https://betowa.sena.edu.co/" target="_blank" class="btn-sena-principal">
+                Acceder a BETOWA SENA →
+            </a>
+            <p class="sena-aviso">En SENA encontrarás programas diseñados para ayudarte a alcanzar tus metas profesionales.</p>
+        </div>
+    </div>
+
 </div>
+
+<style>
+    /* Sección SENA */
+    .seccion-sena {
+        background: linear-gradient(135deg, rgba(0, 102, 204, 0.08) 0%, rgba(0, 61, 153, 0.08) 100%);
+        border-top: 3px solid #0066cc;
+        padding: 50px 30px;
+        margin-top: 50px;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .sena-contenido {
+        max-width: 1000px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .seccion-sena h3 {
+        color: #0066cc;
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 20px 0;
+    }
+
+    .sena-descripcion {
+        color: #1f2937;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .sena-beneficios {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .beneficio-sena {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .beneficio-sena:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 102, 204, 0.15);
+    }
+
+    .icono-beneficio {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .beneficio-sena p {
+        color: #1f2937;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .btn-sena-principal {
+        display: inline-block;
+        background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+        color: white;
+        padding: 18px 50px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .btn-sena-principal:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 102, 204, 0.5);
+        color: white;
+    }
+
+    .sena-aviso {
+        color: #666;
+        font-size: 0.95rem;
+        margin: 0;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .seccion-sena {
+            padding: 40px 20px;
+            margin-top: 30px;
+        }
+
+        .seccion-sena h3 {
+            font-size: 1.5rem;
+        }
+
+        .sena-descripcion {
+            font-size: 1rem;
+        }
+
+        .btn-sena-principal {
+            padding: 15px 40px;
+            font-size: 1rem;
+        }
+    }
+</style>
 
 {% endblock %}

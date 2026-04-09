@@ -8,6 +8,9 @@ urlpatterns = [
     path('servicios/', views.test_vocacional, name='servicios'),
     path('resultado/', views.resultado_test, name='resultado'),
 
+    # API
+    path('api/preguntas/', views.obtener_preguntas_test, name='api_preguntas'),
+
     # CRUD
     path('usuarios/', views.gestion_usuarios, name='gestion_usuarios'),
     path('usuarios/editar/<int:pk>/', views.editar_usuario, name='editar_usuario'),

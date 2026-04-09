@@ -7,50 +7,204 @@
 
 <style>
 body {
-    background: linear-gradient(135deg, #adadad);
-    color: #F5F5F5;
+    background: linear-gradient(135deg, #e8eef7 0%, #dfe8f3 100%);
+    min-height: 100vh;
+    color: #1f2937;
+}
+
+.header-test {
+    text-align: center;
+    padding: 60px 20px;
+    color: white;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.95) 0%, rgba(0, 61, 153, 0.95) 100%);
+    border-radius: 0px;
+    margin: -12px -12px 40px -12px;
+}
+
+.header-test h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.header-test p {
+    font-size: 1.3rem;
+    margin: 0;
+    opacity: 0.95;
 }
 
 .test-card {
-    background: #004526;
-    border-radius: 20px;
-    padding: 40px;
-    margin-top: 40px;
+    background: white;
+    border-radius: 25px;
+    padding: 50px;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-.pregunta { display: none; }
-.pregunta.activa { display: block; }
+.progress-container {
+    margin-bottom: 40px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #0066cc;
+}
 
 .progress {
-    height: 22px;
-    border-radius: 22px;
+    height: 12px;
+    border-radius: 10px;
+    background: #e5e7eb;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .progress-bar {
-    background-color: #2d3877;
+    background: linear-gradient(90deg, #0066cc 0%, #003d99 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.4);
+}
+
+.pregunta {
+    display: none;
+    animation: fadeIn 0.4s ease-in;
+}
+
+.pregunta.activa {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pregunta h4 {
+    font-size: 1.6rem;
+    color: #1f2937;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.pregunta-numeros {
+    display: inline-block;
+    background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 15px;
+}
+
+.botones-respuesta {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.botones-respuesta button {
+    flex: 1;
+    max-width: 250px;
+    padding: 18px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn-interes {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+}
+
+.btn-interes:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+}
+
+.btn-no-interes {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+}
+
+.btn-no-interes:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(75, 85, 99, 0.4);
+}
+
+.boton-resultado {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.boton-resultado button {
+    padding: 18px 60px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #0066cc 0%, #003d99 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+    transition: all 0.3s ease;
+}
+
+.boton-resultado button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.6);
 }
 </style>
 
-<h1 class="text-center mb-4">Descubre tu futuro con EDUFORM</h1>
+<div class="header-test">
+    <h1>🎯 ¿Cuál es tu vocación?</h1>
+    <p>Descubre tu futuro en minutos - Test vocacional interactivo</p>
+</div>
 
 <div class="container d-flex justify-content-center">
     <div class="test-card" style="max-width:900px; width:100%;">
 
-        <div class="progress mb-4">
-            <div id="barra" class="progress-bar" style="width:0%"></div>
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Tu progreso</span>
+                <span id="progreso">Cargando...</span>
+            </div>
+            <div class="progress">
+                <div id="barra" class="progress-bar" style="width:0%"></div>
+            </div>
         </div>
 
         <form id="formTest" method="post" action="{% url 'resultado' %}">
             {% csrf_token %}
 
-            <!-- 🔥 INPUT CLAVE -->
             <input type="hidden" name="resultados" id="resultadosInput">
 
             <div id="contenedorPreguntas"></div>
 
-            <div class="text-center d-none" id="botonResultado">
-                <button type="submit" class="btn btn-primary mt-3">
-                    Ver Resultado
+            <div class="boton-resultado d-none" id="botonResultado">
+                <button type="submit">
+                    ✨ Ver Mi Resultado
                 </button>
             </div>
 
@@ -61,98 +215,65 @@ body {
 <script>
 
 // ==========================
-// PREGUNTAS
+// VARIABLES GLOBALES
 // ==========================
-const preguntas = [
-"¿Te gustaría programar aplicaciones o páginas web?",
-"¿Te interesa reparar computadores o redes?",
-"¿Te gustaría desarrollar software o videojuegos?",
-"¿Te interesa trabajar con bases de datos?",
-
-"¿Te gustaría administrar una empresa o negocio?",
-"¿Te interesa organizar proyectos empresariales?",
-"¿Te gustaría trabajar en contabilidad o finanzas?",
-"¿Te interesa emprender tu propio negocio?",
-
-"¿Te gustaría diseñar logotipos o publicidad digital?",
-"¿Te interesa editar videos o contenido multimedia?",
-"¿Te gustaría trabajar con animación digital?",
-"¿Te interesa crear contenido para redes sociales?",
-
-"¿Te gustaría ayudar en la atención de pacientes?",
-"¿Te interesa promover hábitos saludables?",
-"¿Te gustaría trabajar en hospitales o clínicas?",
-"¿Te interesa cuidar adultos mayores o niños?",
-
-"¿Te gustaría guiar turistas o mostrar lugares?",
-"¿Te interesa organizar viajes o eventos?",
-"¿Te gustaría trabajar en hoteles o turismo?",
-"¿Te interesa promover destinos turísticos?",
-
-"¿Te gustaría construir casas o edificios?",
-"¿Te interesa interpretar planos de construcción?",
-"¿Te gustaría supervisar obras?",
-"¿Te interesa trabajar con herramientas de construcción?",
-
-"¿Te gustaría trabajar con cultivos o alimentos?",
-"¿Te interesa procesar productos agrícolas?",
-"¿Te gustaría mejorar la producción agrícola?",
-"¿Te interesa trabajar en el campo?",
-
-"¿Te gustaría reparar motos o carros?",
-"¿Te interesa trabajar con motores?",
-"¿Te gustaría diagnosticar fallas mecánicas?",
-"¿Te interesa mantener vehículos?"
-];
-
-
-const categorias = [
-"Tecnología","Tecnología","Tecnología","Tecnología",
-
-"Administración","Administración","Administración","Administración",
-
-"Diseño y Multimedia","Diseño y Multimedia","Diseño y Multimedia","Diseño y Multimedia",
-
-"Salud","Salud","Salud","Salud",
-
-"Turismo","Turismo","Turismo","Turismo",
-
-"Construcción","Construcción","Construcción","Construcción",
-
-"Agroindustria","Agroindustria","Agroindustria","Agroindustria",
-
-"Mecánica","Mecánica","Mecánica","Mecánica"
-];
-
-// ==========================
+let preguntas = [];
+let categorias = [];
 let resultados = {};
-categorias.forEach(cat => resultados[cat] = 0);
-
 let actual = 0;
-const total = preguntas.length;
+let total = 0;
 
 const contenedor = document.getElementById("contenedorPreguntas");
 const barra = document.getElementById("barra");
 const boton = document.getElementById("botonResultado");
 
 // ==========================
+// OBTENER PREGUNTAS DE LA BD
+// ==========================
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/preguntas/')
+        .then(response => response.json())
+        .then(data => {
+            preguntas = data.preguntas;
+            categorias = data.areas;
+            total = preguntas.length;
+            
+            // Inicializar resultados
+            categorias.forEach(cat => resultados[cat] = 0);
+            
+            // Actualizar progreso
+            document.getElementById("progreso").textContent = `0/${total}`;
+            
+            // Crear preguntas
+            crearPreguntas();
+        })
+        .catch(error => {
+            console.error('Error al obtener preguntas:', error);
+            alert('Error al cargar las preguntas. Por favor, recarga la página.');
+        });
+});
+
+// ==========================
 // CREAR PREGUNTAS
 // ==========================
-preguntas.forEach((texto, i) => {
+function crearPreguntas() {
+    preguntas.forEach((preguntaObj, i) => {
+        const div = document.createElement("div");
+        div.classList.add("pregunta");
 
-    const div = document.createElement("div");
-    div.classList.add("pregunta");
+        if(i === 0) div.classList.add("activa");
 
-    if(i === 0) div.classList.add("activa");
+        div.innerHTML = `
+            <h4><span class="pregunta-numeros">${i+1}</span>${preguntaObj.texto}</h4>
+            <div class="botones-respuesta">
+                <button type="button" class="btn-interes" onclick="responder(${i}, true)">👍 Me Interesa</button>
+                <button type="button" class="btn-no-interes" onclick="responder(${i}, false)">👎 No me Interesa</button>
+            </div>
+        `;
 
-    div.innerHTML = `
-        <h4>${i+1}. ${texto}</h4>
-        <button type="button" onclick="responder(${i}, true)">👍 Me interesa</button>
-        <button type="button" onclick="responder(${i}, false)">👎 No me interesa</button>
-    `;
-
-    contenedor.appendChild(div);
-});
+        contenedor.appendChild(div);
+    });
+}
 
 // ==========================
 // RESPONDER
@@ -160,13 +281,14 @@ preguntas.forEach((texto, i) => {
 function responder(i, interes){
 
     if(interes){
-        resultados[categorias[i]]++;
+        resultados[preguntas[i].area]++;
     }
 
     document.querySelectorAll(".pregunta")[i].classList.remove("activa");
 
     actual++;
     barra.style.width = (actual / total * 100) + "%";
+    document.getElementById("progreso").textContent = actual + "/" + total;
 
     if(actual < total){
         document.querySelectorAll(".pregunta")[actual].classList.add("activa");

@@ -4,9 +4,10 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 import json
 
-from .models import Carrera, Resultado, AreaVocacional
+from .models import Carrera, Resultado, AreaVocacional, Pregunta
 from .forms import UsuarioForm, FormularioRegistro
 
 
@@ -145,3 +146,37 @@ def eliminar_usuario(request, pk):
     return render(request, 'paginas/eliminar_usuario.html', {
         'usuario': usuario
     })
+
+
+# ======================
+# API - PREGUNTAS TEST
+# ======================
+def obtener_preguntas_test(request):
+    """
+    Devuelve las preguntas del test en formato JSON
+    obtenidas directamente de la base de datos
+    """
+    preguntas = Pregunta.objects.all().select_related('area')
+    
+    datos = {
+        'preguntas': [],
+        'areas': []
+    }
+    
+    areas_dict = {}
+    
+    for pregunta in preguntas:
+        area_nombre = pregunta.area.nombre
+        
+        # Agregar pregunta
+        datos['preguntas'].append({
+            'texto': pregunta.texto,
+            'area': area_nombre
+        })
+        
+        # Agregar área si no existe
+        if area_nombre not in areas_dict:
+            areas_dict[area_nombre] = True
+            datos['areas'].append(area_nombre)
+    
+    return JsonResponse(datos)
