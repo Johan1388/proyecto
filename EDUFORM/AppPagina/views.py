@@ -120,12 +120,12 @@ def gestion_usuarios(request):
     preguntas_list = Pregunta.objects.all().select_related('area').order_by('area', 'id')
     
     # Paginación de usuarios
-    paginator_usuarios = Paginator(usuarios_list, 5)
+    paginator_usuarios = Paginator(usuarios_list, 10)
     page_usuarios = request.GET.get('page_usuarios', 1)
     usuarios = paginator_usuarios.get_page(page_usuarios)
     
     # Paginación de preguntas
-    paginator_preguntas = Paginator(preguntas_list, 5)
+    paginator_preguntas = Paginator(preguntas_list, 10)
     page_preguntas = request.GET.get('page_preguntas', 1)
     preguntas = paginator_preguntas.get_page(page_preguntas)
     

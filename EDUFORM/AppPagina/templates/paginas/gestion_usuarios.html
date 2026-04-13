@@ -18,7 +18,7 @@
             </a>
         </div>
 
-        <div class="card p-4">
+        <div class="card p-4" id="usuarios-container">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -118,7 +118,7 @@
             </a>
         </div>
 
-        <div class="card p-4">
+        <div class="card p-4" id="preguntas-container">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -201,4 +201,30 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('click', function(e) {
+    // Detectar si el clic fue en un enlace de paginación
+    const link = e.target.closest('.page-link');
+    if (!link) return;
+    
+    const container = link.closest('#usuarios-container, #preguntas-container');
+    if (!container) return; // Si no está dentro de nuestros contenedores AJAX, ignorar
+
+    e.preventDefault();
+    const url = link.getAttribute('href');
+    if (!url || url === '#' || link.parentElement.classList.contains('disabled')) return;
+
+    fetch(url)
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newContent = doc.getElementById(container.id).innerHTML;
+        container.innerHTML = newContent;
+        window.history.pushState({}, '', url); // Actualiza la URL en el navegador
+    })
+    .catch(err => console.error('Error en la carga asíncrona:', err));
+});
+</script>
 {% endblock %}
