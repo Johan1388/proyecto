@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Editar Pregunta - EDUFORM{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5 mb-5" style="max-width: 700px;">
+    <div class="mb-4">
+        <h2 class="fw-bold">Editar Pregunta</h2>
+        <p class="text-muted">Modifica el contenido o área de esta pregunta.</p>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body p-4">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="alert alert-danger mt-1" role="alert">
+                                {% for error in field.errors %}
+                                    <small>{{ error }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Guardar Cambios
+                    </button>
+                    <a href="{% url 'gestion_preguntas' %}" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

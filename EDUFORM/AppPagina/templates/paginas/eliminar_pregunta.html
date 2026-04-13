@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Eliminar Pregunta - EDUFORM{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5 mb-5" style="max-width: 600px;">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Eliminar Pregunta</h5>
+        </div>
+        <div class="card-body p-4">
+            <p class="lead mb-3">¿Está seguro de que desea eliminar esta pregunta?</p>
+            
+            <div class="alert alert-info mb-4">
+                <strong>Pregunta:</strong><br>
+                {{ pregunta.texto }}
+                <br><br>
+                <strong>Área Vocacional:</strong> {{ pregunta.area.nombre }}
+            </div>
+
+            <p class="text-danger small mb-4">
+                <strong>Advertencia:</strong> Esta acción no se puede deshacer.
+            </p>
+
+            <div class="d-flex gap-2">
+                <form method="POST" class="flex-grow-1">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger w-100">
+                        Sí, eliminar pregunta
+                    </button>
+                </form>
+                <a href="{% url 'gestion_preguntas' %}" class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from .models import Pregunta, AreaVocacional
 import re
 
 
@@ -73,14 +74,8 @@ class FormularioRegistro(UserCreationForm):
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
 
-        if len(password1) < 8:
-            raise forms.ValidationError('Mínimo 8 caracteres.')
-
-        if password1.isdigit():
-            raise forms.ValidationError('No puede ser solo números.')
-
-        if password1.isalpha():
-            raise forms.ValidationError('Debe tener letras y números.')
+        if password1 and len(password1) < 8:
+            raise forms.ValidationError('La contraseña debe tener mínimo 8 caracteres.')
 
         return password1
 
@@ -123,3 +118,23 @@ class FormularioLogin(AuthenticationForm):
             'placeholder': 'Contraseña'
         })
     )
+
+
+# =========================
+# FORMULARIO PREGUNTA
+# =========================
+class PreguntaForm(forms.ModelForm):
+
+    class Meta:
+        model = Pregunta
+        fields = ['texto', 'area']
+        widgets = {
+            'texto': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingresa el texto de la pregunta',
+                'rows': 4
+            }),
+            'area': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }

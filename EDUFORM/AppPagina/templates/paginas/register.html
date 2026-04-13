@@ -1,54 +1,117 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Registro{% endblock %}
+{% block titulo %}Registro - EDUFORM{% endblock %}
 
 {% block contenido %}
 
-<div class="container mt-5" style="max-width:400px;">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">Crear Cuenta</h2>
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow" style="max-width:500px; width:100%; border-radius:15px;">
+        
+        <div class="card-header bg-primary text-white text-center">
+            <h3 class="mb-0">Crear Cuenta</h3>
         </div>
+
         <div class="card-body">
+
             {% if form.non_field_errors %}
-                <div class="alert alert-danger">
+                <div class="alert alert-danger" role="alert">
+                    <strong>Error en el formulario:</strong>
                     {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
+                        <p class="mb-0">- {{ error }}</p>
                     {% endfor %}
                 </div>
             {% endif %}
 
-            <form method="post" novalidate>
-                {% csrf_token %}
-                
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-
-                {% for field in form %}
-                    <div class="mb-3">
-                        {{ field.label_tag }}
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="alert alert-danger mt-1" role="alert">
-                                {% for error in field.errors %}
-                                    <small>{{ error }}</small><br>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
                     </div>
                 {% endfor %}
+            {% endif %}
 
-                <button type="submit" class="btn btn-primary w-100">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="id_username" class="form-label fw-semibold">
+                        Usuario
+                    </label>
+                    <input type="text" class="form-control" id="id_username" name="username" placeholder="Nombre de usuario" maxlength="150" required>
+                    <small class="form-text text-muted d-block mt-1">Mínimo 3 caracteres. Solo letras, números, puntos y guiones.</small>
+                    {% if form.username.errors %}
+                        <div class="alert alert-danger mt-1 py-1">
+                            {% for error in form.username.errors %}
+                                <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="id_email" class="form-label fw-semibold">
+                        Correo Electrónico
+                    </label>
+                    <input type="email" class="form-control" id="id_email" name="email" placeholder="correo@ejemplo.com" required>
+                    {% if form.email.errors %}
+                        <div class="alert alert-danger mt-1 py-1">
+                            {% for error in form.email.errors %}
+                                <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password1 -->
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label fw-semibold">
+                        Contraseña
+                    </label>
+                    <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Contraseña" required>
+                    <small class="form-text text-muted d-block mt-1">
+                        Mínimo 8 caracteres.
+                    </small>
+                    {% if form.password1.errors %}
+                        <div class="alert alert-danger mt-1 py-1">
+                            {% for error in form.password1.errors %}
+                                <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password2 -->
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label fw-semibold">
+                        Confirmar Contraseña
+                    </label>
+                    <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Confirma tu contraseña" required>
+                    {% if form.password2.errors %}
+                        <div class="alert alert-danger mt-1 py-1">
+                            {% for error in form.password2.errors %}
+                                <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3 py-2 fw-semibold">
                     Registrarse
                 </button>
+
             </form>
 
-            <div class="text-center mt-3">
-                <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+            <hr class="my-4">
+
+            <div class="text-center">
+                <p class="mb-0">
+                    ¿Ya tienes cuenta?
+                    <a href="{% url 'login' %}" class="fw-bold text-primary">Inicia sesión aquí</a>
+                </p>
             </div>
+
         </div>
     </div>
 </div>

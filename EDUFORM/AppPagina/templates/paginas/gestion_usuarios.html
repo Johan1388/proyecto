@@ -1,61 +1,203 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Gestión de Usuarios - EDUFORM{% endblock %}
+{% block titulo %}Gestión de Usuarios y Preguntas - EDUFORM{% endblock %}
 
 {% block contenido %}
-<div class="container mt-5 mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold">Gestión de Usuarios</h2>
-            <p class="text-muted">Administra los usuarios registrados.</p>
+<div class="container-fluid mt-5 mb-5">
+    <h2 class="fw-bold mb-4">Panel de Gestión</h2>
+
+    <!-- GESTIÓN DE USUARIOS -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="fw-bold">Gestión de Usuarios</h4>
+                <p class="text-muted">Administra los usuarios registrados.</p>
+            </div>
+            <a href="{% url 'register' %}" class="btn btn-success">
+                Nuevo Usuario
+            </a>
         </div>
 
-        <a href="{% url 'register' %}" class="btn btn-success">
-            ➕ Nuevo Usuario
-        </a>
+        <div class="card p-4">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Fecha</th>
+                            <th>Resultado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td>#{{ usuario.id }}</td>
+                            <td>{{ usuario.username }}</td>
+                            <td>{{ usuario.email }}</td>
+                            <td>{{ usuario.date_joined|date:"d M Y" }}</td>
+
+                            <td>
+                                {% if usuario.resultado_set.all %}
+                                    <span class="badge bg-info text-dark">
+                                        {{ usuario.resultado_set.last.area.nombre }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Sin test</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-center">
+                                {% if user.is_staff or usuario == request.user %}
+                                <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINACIÓN USUARIOS -->
+            <nav aria-label="Paginación de usuarios">
+                <ul class="pagination justify-content-center mt-4">
+                    {% if usuarios.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page_usuarios=1">Primera</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page_usuarios={{ usuarios.previous_page_number }}">Anterior</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Primera</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Anterior</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Página {{ usuarios.number }} de {{ usuarios.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if usuarios.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page_usuarios={{ usuarios.next_page_number }}">Siguiente</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page_usuarios={{ usuarios.paginator.num_pages }}">Última</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Siguiente</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Última</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </div>
 
-    <div class="card p-4">
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Usuario</th>
-                        <th>Email</th>
-                        <th>Fecha</th>
-                        <th>Resultado</th>
-                        <th class="text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for usuario in usuarios %}
-                    <tr>
-                        <td>#{{ usuario.id }}</td>
-                        <td>{{ usuario.username }}</td>
-                        <td>{{ usuario.email }}</td>
-                        <td>{{ usuario.date_joined|date:"d M Y" }}</td>
+    <!-- GESTIÓN DE PREGUNTAS -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="fw-bold">Gestión de Preguntas</h4>
+                <p class="text-muted">Administra las preguntas del test vocacional.</p>
+            </div>
+            <a href="{% url 'crear_pregunta' %}" class="btn btn-success">
+                Nueva Pregunta
+            </a>
+        </div>
 
-                        <td>
-                            {% if usuario.resultado_set.all %}
-                                <span class="badge bg-info text-dark">
-                                    {{ usuario.resultado_set.last.area.nombre }}
-                                </span>
-                            {% else %}
-                                <span class="badge bg-secondary">Sin test</span>
-                            {% endif %}
-                        </td>
+        <div class="card p-4">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Pregunta</th>
+                            <th>Área Vocacional</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pregunta in preguntas %}
+                        <tr>
+                            <td>#{{ pregunta.id }}</td>
+                            <td>{{ pregunta.texto|truncatewords:20 }}</td>
+                            <td>
+                                <span class="badge bg-primary">{{ pregunta.area.nombre }}</span>
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'editar_pregunta' pregunta.id %}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{% url 'eliminar_pregunta' pregunta.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-5">
+                                <p>No hay preguntas registradas.</p>
+                                <a href="{% url 'crear_pregunta' %}" class="btn btn-sm btn-success">
+                                    Crear Nueva Pregunta
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-                        <td class="text-center">
-                            {% if user.is_staff or usuario == request.user %}
-                            <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-warning btn-sm">✏️</a>
-                            <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger btn-sm">🗑️</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <!-- PAGINACIÓN PREGUNTAS -->
+            <nav aria-label="Paginación de preguntas">
+                <ul class="pagination justify-content-center mt-4">
+                    {% if preguntas.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page_preguntas=1">Primera</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page_preguntas={{ preguntas.previous_page_number }}">Anterior</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Primera</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Anterior</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Página {{ preguntas.number }} de {{ preguntas.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if preguntas.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page_preguntas={{ preguntas.next_page_number }}">Siguiente</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page_preguntas={{ preguntas.paginator.num_pages }}">Última</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Siguiente</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Última</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

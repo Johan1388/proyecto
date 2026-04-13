@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Panel de Administración - EDUFORM{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid mt-5 mb-5">
+    <div class="mb-5">
+        <h1 class="fw-bold">Panel de Administración</h1>
+        <p class="text-muted fs-6">Gestiona todos los aspectos de la plataforma EDUFORM</p>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <div style="font-size: 2.5rem; color: #0066cc; font-weight: bold;">
+                        {{ usuarios_count }}
+                    </div>
+                    <p class="text-muted mb-0">Usuarios Registrados</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <div style="font-size: 2.5rem; color: #059669; font-weight: bold;">
+                        {{ preguntas_count }}
+                    </div>
+                    <p class="text-muted mb-0">Preguntas del Test</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <div style="font-size: 2.5rem; color: #9333ea; font-weight: bold;">
+                        {{ areas_count }}
+                    </div>
+                    <p class="text-muted mb-0">Áreas Vocacionales</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <div style="font-size: 2.5rem; color: #dc2626; font-weight: bold;">
+                        {{ resultados_count }}
+                    </div>
+                    <p class="text-muted mb-0">Tests Realizados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIONES DE GESTIÓN -->
+    <div class="row">
+        <!-- GESTIÓN DE USUARIOS -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow" style="border-top: 4px solid #0066cc;">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Gestión de Usuarios</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Administra los usuarios registrados en la plataforma, edita sus datos o elimínalos si es necesario.</p>
+                    
+                    <div class="d-flex flex-column gap-2">
+                        <a href="{% url 'gestion_usuarios' %}" class="btn btn-primary">
+                            Ver todos los usuarios
+                        </a>
+                        <a href="{% url 'register' %}" class="btn btn-success">
+                            Crear nuevo usuario
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GESTIÓN DE PREGUNTAS -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow" style="border-top: 4px solid #059669;">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Gestión de Preguntas</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Administra las preguntas del test vocacional, crea nuevas preguntas o edita las existentes según sea necesario.</p>
+                    
+                    <div class="d-flex flex-column gap-2">
+                        <a href="{% url 'gestion_preguntas' %}" class="btn btn-primary">
+                            Ver todas las preguntas
+                        </a>
+                        <a href="{% url 'crear_pregunta' %}" class="btn btn-success">
+                            Crear nueva pregunta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCIONES RÁPIDAS -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'gestion_usuarios' %}" class="text-decoration-none">
+                                <div style="padding: 20px; background: #f0f4ff; border-radius: 8px; transition: all 0.3s ease;" 
+                                     onmouseover="this.style.background='#0066cc'; this.style.color='white'"
+                                     onmouseout="this.style.background='#f0f4ff'; this.style.color='black'">
+
+                                    <strong>Usuarios</strong>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'gestion_preguntas' %}" class="text-decoration-none">
+                                <div style="padding: 20px; background: #f0fff4; border-radius: 8px; transition: all 0.3s ease;"
+                                     onmouseover="this.style.background='#059669'; this.style.color='white'"
+                                     onmouseout="this.style.background='#f0fff4'; this.style.color='black'">
+
+                                    <strong>Preguntas</strong>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'inicio' %}" class="text-decoration-none">
+                                <div style="padding: 20px; background: #fef3c7; border-radius: 8px; transition: all 0.3s ease;"
+                                     onmouseover="this.style.background='#f59e0b'; this.style.color='white'"
+                                     onmouseout="this.style.background='#fef3c7'; this.style.color='black'">
+
+                                    <strong>Inicio</strong>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

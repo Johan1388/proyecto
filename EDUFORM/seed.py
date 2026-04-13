@@ -1,10 +1,13 @@
 import os
 import django
+import random
+from datetime import datetime, timedelta
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AppEduform.settings')
 django.setup()
 
-from AppPagina.models import AreaVocacional, Carrera, Pregunta
+from AppPagina.models import AreaVocacional, Carrera, Pregunta, Resultado
+from django.contrib.auth.models import User
 
 def seed_data():
     # Crear áreas vocacionales
@@ -131,6 +134,68 @@ def seed_data():
         pregunta, created = Pregunta.objects.get_or_create(**pregunta_data)
         print(f"Pregunta: {pregunta.texto[:50]}... {'creada' if created else 'ya existe'}")
 
+
+def create_test_users():
+    """Crea 50 usuarios con test vocacional completado"""
+    try:
+        areas = list(AreaVocacional.objects.all())
+        
+        if not areas:
+            print("Error: No hay áreas vocacionales. Ejecuta seed_data() primero.")
+            return
+        
+        created_count = 0
+        
+        for i in range(1, 51):
+            username = f"usuario{i:03d}"
+            email = f"usuario{i:03d}@eduform.com"
+            password = f"password{i:03d}"
+            
+            # Crear usuario si no existe
+            try:
+                user = User.objects.get(username=username)
+                print(f"Usuario {username} ya existe.")
+            except User.DoesNotExist:
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password
+                )
+                created_count += 1
+                print(f"Usuario {username} creado exitosamente.")
+            
+            # Crear resultado de test (asignar área aleatoria)
+            area_aleatoria = random.choice(areas)
+            
+            # Generar fecha aleatoria en los últimos 30 días
+            fecha_random = datetime.now() - timedelta(days=random.randint(0, 30))
+            
+            # Crear resultado si no existe
+            resultado, created = Resultado.objects.get_or_create(
+                usuario=user,
+                area=area_aleatoria,
+                defaults={'fecha': fecha_random}
+            )
+            
+            if created:
+                print(f"  - Test vocacional completado: Área {area_aleatoria.nombre}")
+            else:
+                print(f"  - Test vocacional ya existe para esta área")
+        
+        print(f"\nTotal de usuarios creados: {created_count}/50")
+        print("Proceso completado exitosamente.")
+    
+    except Exception as e:
+        print(f"Error al crear usuarios: {str(e)}")
+
+
 if __name__ == '__main__':
+    print("=== Inicializando base de datos EDUFORM ===\n")
+    
+    print("1. Sembrando datos base (áreas, carreras, preguntas)...")
     seed_data()
-    print("Datos sembrados exitosamente.")
+    
+    print("\n2. Creando 50 usuarios con test vocacional completado...")
+    create_test_users()
+    
+    print("\n=== Proceso completado exitosamente ===")

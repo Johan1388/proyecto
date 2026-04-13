@@ -5,10 +5,27 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 import json
 
 from .models import Carrera, Resultado, AreaVocacional, Pregunta
-from .forms import UsuarioForm, FormularioRegistro
+from .forms import UsuarioForm, FormularioRegistro, PreguntaForm
+
+
+@staff_member_required
+def admin_dashboard(request):
+    """Dashboard de administración principal"""
+    usuarios_count = User.objects.count()
+    preguntas_count = Pregunta.objects.count()
+    areas_count = AreaVocacional.objects.count()
+    resultados_count = Resultado.objects.count()
+    
+    return render(request, 'paginas/admin_dashboard.html', {
+        'usuarios_count': usuarios_count,
+        'preguntas_count': preguntas_count,
+        'areas_count': areas_count,
+        'resultados_count': resultados_count,
+    })
 
 
 # ======================
@@ -97,11 +114,28 @@ def register(request):
 # ======================
 # LISTAR USUARIOS
 # ======================
-@login_required
+@staff_member_required
 def gestion_usuarios(request):
-    usuarios = User.objects.all()
+    usuarios_list = User.objects.all()
+    preguntas_list = Pregunta.objects.all().select_related('area').order_by('area', 'id')
+    
+    # Paginación de usuarios
+    paginator_usuarios = Paginator(usuarios_list, 5)
+    page_usuarios = request.GET.get('page_usuarios', 1)
+    usuarios = paginator_usuarios.get_page(page_usuarios)
+    
+    # Paginación de preguntas
+    paginator_preguntas = Paginator(preguntas_list, 5)
+    page_preguntas = request.GET.get('page_preguntas', 1)
+    preguntas = paginator_preguntas.get_page(page_preguntas)
+    
     return render(request, 'paginas/gestion_usuarios.html', {
-        'usuarios': usuarios
+        'usuarios': usuarios,
+        'preguntas': preguntas,
+        'paginator_usuarios': paginator_usuarios,
+        'paginator_preguntas': paginator_preguntas,
+        'page_usuarios': page_usuarios,
+        'page_preguntas': page_preguntas,
     })
 
 
@@ -180,3 +214,64 @@ def obtener_preguntas_test(request):
             datos['areas'].append(area_nombre)
     
     return JsonResponse(datos)
+
+
+# ======================
+# CRUD PREGUNTAS
+# ======================
+@staff_member_required
+def gestion_preguntas(request):
+    """Listar todas las preguntas"""
+    preguntas = Pregunta.objects.all().select_related('area').order_by('area', 'id')
+    return render(request, 'paginas/gestion_preguntas.html', {
+        'preguntas': preguntas
+    })
+
+
+@staff_member_required
+def crear_pregunta(request):
+    """Crear una nueva pregunta"""
+    if request.method == 'POST':
+        form = PreguntaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('gestion_preguntas')
+    else:
+        form = PreguntaForm()
+
+    return render(request, 'paginas/crear_pregunta.html', {
+        'form': form
+    })
+
+
+@staff_member_required
+def editar_pregunta(request, pk):
+    """Editar una pregunta existente"""
+    pregunta = get_object_or_404(Pregunta, pk=pk)
+
+    if request.method == 'POST':
+        form = PreguntaForm(request.POST, instance=pregunta)
+        if form.is_valid():
+            form.save()
+            return redirect('gestion_preguntas')
+    else:
+        form = PreguntaForm(instance=pregunta)
+
+    return render(request, 'paginas/editar_pregunta.html', {
+        'form': form,
+        'pregunta': pregunta
+    })
+
+
+@staff_member_required
+def eliminar_pregunta(request, pk):
+    """Eliminar una pregunta"""
+    pregunta = get_object_or_404(Pregunta, pk=pk)
+
+    if request.method == "POST":
+        pregunta.delete()
+        return redirect('gestion_preguntas')
+
+    return render(request, 'paginas/eliminar_pregunta.html', {
+        'pregunta': pregunta
+    })
